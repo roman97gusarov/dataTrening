@@ -1,0 +1,1 @@
+CALL moviesdb.loading_top_movies

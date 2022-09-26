@@ -1,0 +1,2 @@
+LOAD DATA LOCAL INFILE "./data/ratings.csv"
+INTO TABLE stg_moviesdb.raw_ratings FIELDS TERMINATED BY ',' LINES TERMINATED BY "\n" IGNORE 1 LINES;

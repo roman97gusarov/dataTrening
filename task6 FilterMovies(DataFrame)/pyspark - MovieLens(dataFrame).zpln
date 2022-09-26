@@ -1,0 +1,825 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%sh\nwget --no-check-certificate  https://files.grouplens.org/datasets/movielens/ml-latest-small.zip\n\nunzip -d data ml-latest-small.zip\nrm -rf ml-latest-small.zip\n\nhdfs dfs -rm -r /tmp/data\nhdfs dfs -rm -r /tmp/results\n\nhdfs dfs -mkdir -p /tmp/data\nhdfs dfs -mkdir -p /tmp/results\n\nhdfs dfs -put data/ml-latest-small/movies.csv /tmp/data\nhdfs dfs -put data/ml-latest-small/ratings.csv /tmp/data",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:02:28+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/sh"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "--2022-08-16 12:02:28--  https://files.grouplens.org/datasets/movielens/ml-latest-small.zip\nResolving files.grouplens.org (files.grouplens.org)... 128.101.65.152\nConnecting to files.grouplens.org (files.grouplens.org)|128.101.65.152|:443... connected.\nHTTP request sent, awaiting response... 200 OK\nLength: 978202 (955K) [application/zip]\nSaving to: ‘ml-latest-small.zip’\n\n     0K .......... .......... .......... .......... ..........  5%  265K 3s\n    50K .......... .......... .......... .......... .......... 10%  531K 2s\n   100K .......... .......... .......... .......... .......... 15% 97.7M 2s\n   150K .......... .......... .......... .......... .......... 20%  535K 1s\n   200K .......... .......... .......... .......... .......... 26% 59.9M 1s\n   250K .......... .......... .......... .......... .......... 31%  128M 1s\n   300K .......... .......... .......... .......... .......... 36% 88.4M 1s\n   350K .......... .......... .......... .......... .......... 41%  220M 1s\n   400K .......... .......... .......... .......... .......... 47%  539K 1s\n   450K .......... .......... .......... .......... .......... 52%  116M 0s\n   500K .......... .......... .......... .......... .......... 57% 44.9M 0s\n   550K .......... .......... .......... .......... .......... 62%  210M 0s\n   600K .......... .......... .......... .......... .......... 68%  169M 0s\n   650K .......... .......... .......... .......... .......... 73%  226M 0s\n   700K .......... .......... .......... .......... .......... 78%  192M 0s\n   750K .......... .......... .......... .......... .......... 83%  205M 0s\n   800K .......... .......... .......... .......... .......... 88%  549K 0s\n   850K .......... .......... .......... .......... .......... 94%  135M 0s\n   900K .......... .......... .......... .......... .......... 99%  249M 0s\n   950K .....                                                 100%  140M=0.6s\n\n2022-08-16 12:02:29 (1.65 MB/s) - ‘ml-latest-small.zip’ saved [978202/978202]\n\nArchive:  ml-latest-small.zip\nreplace data/ml-latest-small/links.csv? [y]es, [n]o, [A]ll, [N]one, [r]ename:  NULL\n(EOF or read error, treating as \"[N]one\" ...)\nDeleted /tmp/data\nDeleted /tmp/results\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660645187574_1635267309",
+      "id": "paragraph_1660645187574_1635267309",
+      "dateCreated": "2022-08-16T10:19:47+0000",
+      "dateStarted": "2022-08-16T12:02:28+0000",
+      "dateFinished": "2022-08-16T12:02:42+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:12056"
+    },
+    {
+      "text": "%pyspark\nmovies_path = 'hdfs:///tmp/data/movies.csv'\nratings_path = 'hdfs:///tmp/data/ratings.csv'\n\nregexp = '(?i)'\ngenres = ['Comedy', 'Drama']\nyear_from = 1990\nyear_to = 2000\nN = 10",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:02:43+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660645291080_1173840926",
+      "id": "paragraph_1660645291080_1173840926",
+      "dateCreated": "2022-08-16T10:21:31+0000",
+      "dateStarted": "2022-08-16T12:02:44+0000",
+      "dateFinished": "2022-08-16T12:02:44+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12057"
+    },
+    {
+      "text": "%pyspark\nmovies_df = spark.read.format('csv').option('header', 'true').load(movies_path)\nratings_df = spark.read.format('csv').option('header', 'true').load(ratings_path)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:02:47+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=265",
+              "$$hashKey": "object:16261"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=266",
+              "$$hashKey": "object:16262"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660645509688_386676968",
+      "id": "paragraph_1660645509688_386676968",
+      "dateCreated": "2022-08-16T10:25:09+0000",
+      "dateStarted": "2022-08-16T12:02:47+0000",
+      "dateFinished": "2022-08-16T12:02:48+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12058"
+    },
+    {
+      "text": "%pyspark\nmovies_df.show(10, truncate=False)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T11:20:42+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+----------------------------------+-------------------------------------------+\n|movieId|title                             |genres                                     |\n+-------+----------------------------------+-------------------------------------------+\n|1      |Toy Story (1995)                  |Adventure|Animation|Children|Comedy|Fantasy|\n|2      |Jumanji (1995)                    |Adventure|Children|Fantasy                 |\n|3      |Grumpier Old Men (1995)           |Comedy|Romance                             |\n|4      |Waiting to Exhale (1995)          |Comedy|Drama|Romance                       |\n|5      |Father of the Bride Part II (1995)|Comedy                                     |\n|6      |Heat (1995)                       |Action|Crime|Thriller                      |\n|7      |Sabrina (1995)                    |Comedy|Romance                             |\n|8      |Tom and Huck (1995)               |Adventure|Children                         |\n|9      |Sudden Death (1995)               |Action                                     |\n|10     |GoldenEye (1995)                  |Action|Adventure|Thriller                  |\n+-------+----------------------------------+-------------------------------------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=162",
+              "$$hashKey": "object:12344"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660645523218_196771052",
+      "id": "paragraph_1660645523218_196771052",
+      "dateCreated": "2022-08-16T10:25:23+0000",
+      "dateStarted": "2022-08-16T11:20:42+0000",
+      "dateFinished": "2022-08-16T11:20:42+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12059"
+    },
+    {
+      "text": "%pyspark\nratings_df.show(10, truncate = False)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:02:52+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------+-------+------+---------+\n|userId|movieId|rating|timestamp|\n+------+-------+------+---------+\n|1     |1      |4.0   |964982703|\n|1     |3      |4.0   |964981247|\n|1     |6      |4.0   |964982224|\n|1     |47     |5.0   |964983815|\n|1     |50     |5.0   |964982931|\n|1     |70     |3.0   |964982400|\n|1     |101    |5.0   |964980868|\n|1     |110    |4.0   |964982176|\n|1     |151    |5.0   |964984041|\n|1     |157    |5.0   |964984100|\n+------+-------+------+---------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=267",
+              "$$hashKey": "object:16323"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646227125_547354661",
+      "id": "paragraph_1660646227125_547354661",
+      "dateCreated": "2022-08-16T10:37:07+0000",
+      "dateStarted": "2022-08-16T12:02:52+0000",
+      "dateFinished": "2022-08-16T12:02:52+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12060"
+    },
+    {
+      "text": "%pyspark\nimport re\n\ndef normalize_title(title):\n    exp = r'\\(\\d{4}\\)'\n    matches = re.findall(exp, title)\n    if len(matches) !=0:\n        title = title.replace(matches[-1], \"\")\n    title = title.replace('\"', \"\").strip()\n    \n    return title\n    \ndef get_year_from_title(title):\n    exp = r'\\(\\d{4}\\)'\n    year = -1\n    matches = re.findall(exp, title)\n    if len(matches) !=0:\n        year = int(matches[-1][1:5])\n    \n    return year\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:04+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646253337_1363272675",
+      "id": "paragraph_1660646253337_1363272675",
+      "dateCreated": "2022-08-16T10:37:33+0000",
+      "dateStarted": "2022-08-16T12:03:04+0000",
+      "dateFinished": "2022-08-16T12:03:04+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12061"
+    },
+    {
+      "text": "%pyspark\n\nget_title = spark.udf.register(\"get_title\", lambda x: normalize_title(x))\nget_year = spark.udf.register(\"get_year\", lambda x: get_year_from_title(x))",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:11+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646307236_1357504816",
+      "id": "paragraph_1660646307236_1357504816",
+      "dateCreated": "2022-08-16T10:38:27+0000",
+      "dateStarted": "2022-08-16T12:03:11+0000",
+      "dateFinished": "2022-08-16T12:03:11+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12062"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.sql.functions import split, explode, avg\n\nnormalized_movies = movies_df.select( \\\n                            'movieId', \\\n                            get_title('title').alias('title'), \\\n                            get_year('title').alias('year'), \\\n                            explode(split('genres', '\\\\|')).alias('genre') \\\n                    )",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:13+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646327051_1464140539",
+      "id": "paragraph_1660646327051_1464140539",
+      "dateCreated": "2022-08-16T10:38:47+0000",
+      "dateStarted": "2022-08-16T12:03:13+0000",
+      "dateFinished": "2022-08-16T12:03:13+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12063"
+    },
+    {
+      "text": "%pyspark\nnormalized_movies.show(10, truncate = False)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:16+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+----------------+----+---------+\n|movieId|title           |year|genre    |\n+-------+----------------+----+---------+\n|1      |Toy Story       |1995|Adventure|\n|1      |Toy Story       |1995|Animation|\n|1      |Toy Story       |1995|Children |\n|1      |Toy Story       |1995|Comedy   |\n|1      |Toy Story       |1995|Fantasy  |\n|2      |Jumanji         |1995|Adventure|\n|2      |Jumanji         |1995|Children |\n|2      |Jumanji         |1995|Fantasy  |\n|3      |Grumpier Old Men|1995|Comedy   |\n|3      |Grumpier Old Men|1995|Romance  |\n+-------+----------------+----+---------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=268",
+              "$$hashKey": "object:16446"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646372388_219582627",
+      "id": "paragraph_1660646372388_219582627",
+      "dateCreated": "2022-08-16T10:39:32+0000",
+      "dateStarted": "2022-08-16T12:03:16+0000",
+      "dateFinished": "2022-08-16T12:03:17+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12064"
+    },
+    {
+      "text": "%pyspark\n\nfilter_movies = normalized_movies.filter(normalized_movies.genre.isin(genres)) \\\n                                .filter(normalized_movies.title.rlike(regexp)) \\\n                                .filter(normalized_movies.year.between(year_from, year_to)) \\\n                                .distinct()",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:22+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646382360_869883861",
+      "id": "paragraph_1660646382360_869883861",
+      "dateCreated": "2022-08-16T10:39:42+0000",
+      "dateStarted": "2022-08-16T12:03:22+0000",
+      "dateFinished": "2022-08-16T12:03:22+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12065"
+    },
+    {
+      "text": "%pyspark\nfilter_movies.show(10, truncate = False)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:35+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+-------------------------+----+------+\n|movieId|title                    |year|genre |\n+-------+-------------------------+----+------+\n|418    |Being Human              |1993|Drama |\n|1442   |Prefontaine              |1997|Drama |\n|2006   |Mask of Zorro, The       |1998|Comedy|\n|3129   |Sweet and Lowdown        |1999|Drama |\n|7030   |Radio Flyer              |1992|Drama |\n|25     |Leaving Las Vegas        |1995|Drama |\n|318    |Shawshank Redemption, The|1994|Drama |\n|537    |Sirens                   |1994|Drama |\n|994    |Big Night                |1996|Comedy|\n|1529   |Nowhere                  |1997|Drama |\n+-------+-------------------------+----+------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=269",
+              "$$hashKey": "object:16561"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=270",
+              "$$hashKey": "object:16562"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646432073_560241927",
+      "id": "paragraph_1660646432073_560241927",
+      "dateCreated": "2022-08-16T10:40:32+0000",
+      "dateStarted": "2022-08-16T12:03:35+0000",
+      "dateFinished": "2022-08-16T12:03:36+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12066"
+    },
+    {
+      "text": "%pyspark\n\nmovies_with_rating_df = ratings_df.join(filter_movies, ratings_df.movieId == filter_movies.movieId, \"inner\") \\\n                                    .groupBy(\"genre\", \"title\", \"year\").agg(avg(\"rating\").alias(\"rate\"))",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:41+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646452969_1505403324",
+      "id": "paragraph_1660646452969_1505403324",
+      "dateCreated": "2022-08-16T10:40:52+0000",
+      "dateStarted": "2022-08-16T12:03:41+0000",
+      "dateFinished": "2022-08-16T12:03:41+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12067"
+    },
+    {
+      "text": "%pyspark\nmovies_with_rating_df.show(10, truncate = False)",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:45+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------+-------------------------------+----+------------------+\n|genre |title                          |year|rate              |\n+------+-------------------------------+----+------------------+\n|Comedy|Hudsucker Proxy, The           |1994|3.55              |\n|Drama |Suicide Kings                  |1997|3.423076923076923 |\n|Comedy|Tremors                        |1990|3.4375            |\n|Comedy|For Roseanna (Roseanna's Grave)|1997|4.0               |\n|Comedy|The Lord's Lantern in Budapest |1999|4.5               |\n|Comedy|Train of Life (Train de vie)   |1998|4.5               |\n|Comedy|Night at the Roxbury, A        |1998|2.1               |\n|Comedy|Other Sister, The              |1999|3.3333333333333335|\n|Drama |Mulholland Dr.                 |1999|3.75              |\n|Drama |Bhaji on the Beach             |1993|3.5               |\n+------+-------------------------------+----+------------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=271",
+              "$$hashKey": "object:16705"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=272",
+              "$$hashKey": "object:16706"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=273",
+              "$$hashKey": "object:16707"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646519779_1989410041",
+      "id": "paragraph_1660646519779_1989410041",
+      "dateCreated": "2022-08-16T10:41:59+0000",
+      "dateStarted": "2022-08-16T12:03:45+0000",
+      "dateFinished": "2022-08-16T12:03:46+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12068"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.sql.window import Window\nfrom pyspark.sql.functions import col, row_number\n\nresult_df = movies_with_rating_df.sort(movies_with_rating_df.rate.desc(), movies_with_rating_df.year.desc(), \\\n                                        movies_with_rating_df.title.desc())\nwindowDept = Window.partitionBy(\"genre\").orderBy(col(\"title\").desc())\nresult_df = result_df.withColumn(\"row\",row_number().over(windowDept))\nresult_df = result_df.filter(col(\"row\") <= N)\nresult_df.drop(\"row\")\n                                        ",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:03:54+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[genre: string, title: string, year: string, rate: double]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646542009_1819329244",
+      "id": "paragraph_1660646542009_1819329244",
+      "dateCreated": "2022-08-16T10:42:22+0000",
+      "dateStarted": "2022-08-16T12:03:54+0000",
+      "dateFinished": "2022-08-16T12:03:54+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12069"
+    },
+    {
+      "text": "%pyspark\nresult_df.show()",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:04:06+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------+--------------------+----+------------------+---+\n| genre|               title|year|              rate|row|\n+------+--------------------+----+------------------+---+\n| Drama|Your Friends and ...|1998|               3.5|  1|\n| Drama|Young Poisoner's ...|1995|               3.0|  2|\n| Drama| You Can Count on Me|2000| 4.166666666666667|  3|\n| Drama|               Yi Yi|2000|               4.6|  4|\n| Drama|          Yards, The|2000|               3.4|  5|\n| Drama|   Wuthering Heights|1992|               2.5|  6|\n| Drama|          Wonderland|1999|               4.0|  7|\n| Drama|         Wonder Boys|2000| 3.659090909090909|  8|\n| Drama|                Wolf|1994|           3.15625|  9|\n| Drama|With a Friend Lik...|2000|               4.5| 10|\n|Comedy|         Zero Effect|1998| 3.966666666666667|  1|\n|Comedy|Your Friends and ...|1998|               3.5|  2|\n|Comedy|     You've Got Mail|1998|              3.12|  3|\n|Comedy|  Wrongfully Accused|1998|               2.4|  4|\n|Comedy|      World of Glory|1991|               5.0|  5|\n|Comedy|         Wonder Boys|2000| 3.659090909090909|  6|\n|Comedy|        Woman on Top|2000|               2.0|  7|\n|Comedy|         With Honors|1994|               3.0|  8|\n|Comedy|William Shakespea...|1999|3.1363636363636362|  9|\n|Comedy|      Wild Wild West|1999| 2.207547169811321| 10|\n+------+--------------------+----+------------------+---+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=274",
+              "$$hashKey": "object:16976"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=275",
+              "$$hashKey": "object:16977"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=276",
+              "$$hashKey": "object:16978"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=277",
+              "$$hashKey": "object:16979"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=278",
+              "$$hashKey": "object:16980"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=279",
+              "$$hashKey": "object:16981"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=280",
+              "$$hashKey": "object:16982"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646605057_282506263",
+      "id": "paragraph_1660646605057_282506263",
+      "dateCreated": "2022-08-16T10:43:25+0000",
+      "dateStarted": "2022-08-16T12:04:06+0000",
+      "dateFinished": "2022-08-16T12:04:10+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12070"
+    },
+    {
+      "text": "%pyspark\nresult_df.write.mode(\"overwrite\").format('csv').option(\"headr\", \"true\") \\\n                                    .partitionBy('genre').save('hdfs:///tmp//results')",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T12:04:43+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=281",
+              "$$hashKey": "object:17082"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=282",
+              "$$hashKey": "object:17083"
+            },
+            {
+              "jobUrl": "http://cluster-c714-m.europe-west2-b.c.spatial-rookery-356122.internal:45797/jobs/job?id=283",
+              "$$hashKey": "object:17084"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646614656_30507951",
+      "id": "paragraph_1660646614656_30507951",
+      "dateCreated": "2022-08-16T10:43:34+0000",
+      "dateStarted": "2022-08-16T12:04:43+0000",
+      "dateFinished": "2022-08-16T12:04:48+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:12071"
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-08-16T10:45:39+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1660646739063_1841526142",
+      "id": "paragraph_1660646739063_1841526142",
+      "dateCreated": "2022-08-16T10:45:39+0000",
+      "status": "READY",
+      "$$hashKey": "object:12072"
+    }
+  ],
+  "name": "pyspark - MovieLens(dataFrame)",
+  "id": "2HBRQJ914",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-preview2",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/pyspark - MovieLens(dataFrame)"
+}

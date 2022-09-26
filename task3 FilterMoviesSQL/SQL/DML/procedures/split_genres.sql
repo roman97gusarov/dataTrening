@@ -1,0 +1,1 @@
+CALL moviesdb.split_genres
